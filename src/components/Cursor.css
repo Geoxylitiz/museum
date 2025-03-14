@@ -1,0 +1,64 @@
+/* Hide default cursor */
+html, body {
+  cursor: none;
+}
+
+/* Custom cursor styles */
+.cursor {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background-color: #000;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: width 0.3s, height 0.3s, background-color 0.3s;
+  will-change: transform;
+  mix-blend-mode: difference;
+}
+
+.cursor-follower {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transition: width 0.3s, height 0.3s, border-color 0.3s, background-color 0.3s;
+  will-change: transform;
+}
+
+/* Active state (when hovering over links) */
+.cursor.active {
+  width: 12px;
+  height: 12px;
+  background-color: #fff;
+  mix-blend-mode: normal;
+}
+
+.cursor-follower.active {
+  width: 60px;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-color: transparent;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .cursor, .cursor-follower {
+    display: none;
+  }
+  
+  html, body {
+    cursor: auto;
+  }
+}
+
+/* Locomotive scroll compatibility */
+.has-scroll-smooth .cursor,
+.has-scroll-smooth .cursor-follower {
+  position: fixed;
+  top: 0;
+  left: 0;
+} 

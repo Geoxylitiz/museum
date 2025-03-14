@@ -1,18 +1,61 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { artworks } from '../data/artwork';
+import gsap from 'gsap';
 import './ArtworkDetail.css';
 
 const ArtworkDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const artwork = artworks.find(art => art.id === parseInt(id));
   const [viewMode, setViewMode] = useState('2d'); // Default is 2D
   const threeContainer = useRef(null);
+  const detailRef = useRef(null);
   const [scene, setScene] = useState(null);
   const rendererRef = useRef(null);
   const animationFrameRef = useRef(null);
+  
+  // Initialize animations
+  useEffect(() => {
+    if (!artwork || !detailRef.current) return;
+    
+    // Animate content in
+    const tl = gsap.timeline();
+    
+    tl.from('.artwork-detail-header h1', {
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out'
+    })
+    .from('.artwork-detail-header h2', {
+      y: 30,
+      opacity: 0,
+      duration: 0.6,
+      ease: 'power3.out'
+    }, '-=0.4')
+    .from('.artwork-display', {
+      y: 30,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out'
+    }, '-=0.3')
+    .from('.artwork-info-section', {
+      y: 30,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out'
+    }, '-=0.5')
+    .from('.related-artworks', {
+      y: 30,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power3.out'
+    }, '-=0.5');
+    
+  }, [artwork]);
   
   useEffect(() => {
     if (!artwork) return;
@@ -29,8 +72,6 @@ const ArtworkDetail = () => {
     cleanupThreeJS();
   }, [id, artwork, scene]);
 
-  
-  
   // Function to clean up Three.js resources
   const cleanupThreeJS = () => {
     // Cancel any ongoing animation frame
@@ -72,7 +113,7 @@ const ArtworkDetail = () => {
     rendererRef.current = renderer;
     
     renderer.setSize(width, height);
-    renderer.setClearColor(0x222222);
+    renderer.setClearColor(0xf5f5f5);
     threeContainer.current.innerHTML = '';
     threeContainer.current.appendChild(renderer.domElement);
     
@@ -95,7 +136,8 @@ const ArtworkDetail = () => {
       const textureLoader = new THREE.TextureLoader();
       const texture = textureLoader.load(artwork.imageUrl);
       const geometry = new THREE.SphereGeometry(2, 32, 32);
-      const material = new THREE.MeshStandardMaterial({ map: texture,
+      const material = new THREE.MeshStandardMaterial({ 
+        map: texture,
         color: 0xffffff,
         roughness: 0.7,
         metalness: 0.2
@@ -173,19 +215,43 @@ const ArtworkDetail = () => {
     };
   }, [viewMode, artwork]);
   
+  // Handle back navigation with animation
+  const handleBack = (e) => {
+    e.preventDefault();
+    
+    // Animate out
+    const tl = gsap.timeline({
+      onComplete: () => navigate('/')
+    });
+    
+    tl.to(detailRef.current, {
+      y: 50,
+      opacity: 0,
+      duration: 0.5,
+      ease: 'power3.in'
+    });
+  };
+  
+  // Get related artworks (same category)
+  const relatedArtworks = artwork 
+    ? artworks
+        .filter(art => art.category === artwork.category && art.id !== artwork.id)
+        .slice(0, 3) 
+    : [];
+  console.log(relatedArtworks)
   if (!artwork) {
     return <div className="not-found">Artwork not found</div>;
   }
   
   return (
-    <div className="artwork-detail-container">
+    <div className="artwork-detail-container" >
       <div className="artwork-nav">
-        <Link to="/" className="back-button">← Back to Gallery</Link>
+        <Link to="/" className="back-button" onClick={handleBack}>← Back to Gallery</Link>
       </div>
       
       <div className="artwork-detail-header">
         <h1>{artwork.title}</h1>
-        <h2>by {artwork.artist}</h2>
+        <h2>by {artwork.artist}, {artwork.year}</h2>
         <div className="view-options">
           <button 
             className={viewMode === '2d' ? 'active' : ''} 
@@ -215,15 +281,45 @@ const ArtworkDetail = () => {
       
       <div className="artwork-info-section">
         <div className="artwork-details">
-          <p><strong>Year:</strong> {artwork.year}</p>
-          <p><strong>Medium:</strong> {artwork.medium}</p>
-          <p><strong>Dimensions:</strong> {artwork.dimensions}</p>
+          <div className="detail-item">
+            <span className="detail-label">Category</span>
+            <span className="detail-value">{artwork.category}</span>
+          </div>
+          <div className="detail-item">
+            <span className="detail-label">Medium</span>
+            <span className="detail-value">{artwork.medium}</span>
+          </div>
+          <div className="detail-item">
+            <span className="detail-label">Dimensions</span>
+            <span className="detail-value">{artwork.dimensions}</span>
+          </div>
         </div>
         <div className="artwork-description">
           <h3>About this piece</h3>
           <p>{artwork.description}</p>
         </div>
       </div>
+      
+      {relatedArtworks.length > 0 && (
+        <div className="related-artworks">
+          <h3>Related Works</h3>
+          <div className="related-grid">
+            {relatedArtworks.map(related => (
+              <Link 
+                to={`/artwork/${related.id}`} 
+                key={related.id} 
+                className="related-item"
+              >
+                <img src={related.imageUrl} alt={related.title} />
+                <div className="related-info">
+                  <h4>{related.title}</h4>
+                  <p>{related.artist}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
