@@ -1,0 +1,47 @@
+.navbar {
+    background-color: #333;
+    color: white;
+    padding: 15px 0;
+  }
+  
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .nav-logo {
+    text-decoration: none;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .nav-links a {
+    text-decoration: none;
+    color: white;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+  }
+  
+  .nav-links a:hover {
+    opacity: 1;
+  }
+  
+  @media (max-width: 768px) {
+    .artwork-info-section {
+      grid-template-columns: 1fr;
+    }
+    
+    .gallery-grid {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+  }
