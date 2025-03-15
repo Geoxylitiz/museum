@@ -244,7 +244,7 @@ const ArtworkDetail = () => {
   }
   
   return (
-    <div className="artwork-detail-container" >
+    <div className="artwork-detail-container"  >
       <div className="artwork-nav">
         <Link to="/" className="back-button" onClick={handleBack}>← Back to Gallery</Link>
       </div>
