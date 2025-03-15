@@ -33,7 +33,7 @@ html, body {
 .cursor.active {
   width: 12px;
   height: 12px;
-  background-color: #fff;
+  background-color: #f9792a;
   mix-blend-mode: normal;
 }
 

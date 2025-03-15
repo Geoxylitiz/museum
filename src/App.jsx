@@ -10,7 +10,7 @@ function App() {
   return (
     <Router>
       <div className="app">
-        <Cursor />
+       <Cursor/>
         <Navbar />
         <Routes>
           <Route path="/" element={<Gallery />} />
