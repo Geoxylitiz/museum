@@ -92,7 +92,7 @@ const Navbar = () => {
             <Link to="/contact" className="menu-link" onClick={toggleMenu}>Contact</Link>
           </div>
           <div className="menu-footer">
-            <p>© 2024 Powerhouse Gallery</p>
+            <p>© 2024 BERNARD o-7</p>
             <div className="social-links">
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
