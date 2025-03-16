@@ -3,7 +3,7 @@
   --secondary-color: #ffffff;
   --accent-color: #ff3d00;
   --text-color: #333333;
-  --light-gray: #f5f5f5;
+  --light-gray: #c2baba;
   --medium-gray: #d0d0d0;
   --dark-gray: #777777;
   --overlay-color: rgba(0, 0, 0, 0.85);
@@ -87,7 +87,7 @@ body {
 /* Overall layout */
 .artwork-detail-wrapper {
   min-height: 100vh;
-  background-color: var(--secondary-color);
+  background-color: #F6F3E4;
   color: var(--primary-color);
   position: relative;
 }
@@ -240,9 +240,7 @@ body {
   transition: transform var(--transition-medium);
 }
 
-.artwork-image:hover img {
-  
-}
+
 
 .image-overlay {
   position: absolute;

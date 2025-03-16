@@ -7,6 +7,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import LocomotiveScroll from 'locomotive-scroll';
 import './ArtworkDetail.css';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -244,51 +245,7 @@ const ArtworkDetail = () => {
     // Create a more sophisticated 3D representation
     let object;
     
-    if (artwork.category === 'painting') {
-      // Create a plane with the artwork texture and a frame
-      const textureLoader = new THREE.TextureLoader();
-      const texture = textureLoader.load(artwork.imageUrl);
-      
-      // Creating a frame for the painting
-      const frameGroup = new THREE.Group();
-      
-      // Painting plane
-      const paintingGeometry = new THREE.PlaneGeometry(4, 3);
-      const paintingMaterial = new THREE.MeshStandardMaterial({ 
-        map: texture, 
-        side: THREE.FrontSide 
-      });
-      const painting = new THREE.Mesh(paintingGeometry, paintingMaterial);
-      
-      // Frame
-      const frameThickness = 0.1;
-      const frameWidth = 4 + frameThickness * 2;
-      const frameHeight = 3 + frameThickness * 2;
-      const frameDepth = 0.2;
-      
-      const frameGeometry = new THREE.BoxGeometry(frameWidth, frameHeight, frameDepth);
-      const frameMaterial = new THREE.MeshStandardMaterial({ 
-        color: 0x8B4513, 
-        roughness: 0.5, 
-        metalness: 0.2 
-      });
-      const frame = new THREE.Mesh(frameGeometry, frameMaterial);
-      frame.position.z = -0.15;
-      
-      // Inner cutout for frame
-      const innerGeometry = new THREE.BoxGeometry(4.05, 3.05, frameDepth + 0.05);
-      const innerMaterial = new THREE.MeshBasicMaterial({ 
-        color: 0x000000, 
-        side: THREE.BackSide 
-      });
-      const innerCutout = new THREE.Mesh(innerGeometry, innerMaterial);
-      
-      frameGroup.add(frame);
-      frameGroup.add(innerCutout);
-      frameGroup.add(painting);
-      
-      object = frameGroup;
-    } else if (artwork.category === 'sculpture') {
+    if (artwork.category === 'sculpture') {
       // More detailed sculpture representation
       const geometry = new THREE.SphereGeometry(2, 64, 64);
       const material = new THREE.MeshStandardMaterial({ 
@@ -306,33 +263,60 @@ const ArtworkDetail = () => {
       
       object = new THREE.Mesh(geometry, material);
       object.castShadow = true;
-    } else {
-      // Enhanced default object with more complex geometry
-      const geometry = new THREE.DodecahedronGeometry(2, 1);
-      const material = new THREE.MeshPhysicalMaterial({
-        color: 0xFFFFFF,
-        roughness: 0.2,
-        metalness: 0.7,
-        clearcoat: 0.8,
-        clearcoatRoughness: 0.2,
-        reflectivity: 1.0
-      });
-      
-      // Load texture if available
-      const textureLoader = new THREE.TextureLoader();
-      textureLoader.load(artwork.imageUrl, (texture) => {
-        material.map = texture;
-        material.needsUpdate = true;
-      });
-      
-      object = new THREE.Mesh(geometry, material);
-      object.castShadow = true;
+    } else{
+       // Create a plane with the artwork texture and a frame
+       const textureLoader = new THREE.TextureLoader();
+       const texture = textureLoader.load(artwork.imageUrl);
+       
+       // Creating a frame for the painting
+       const frameGroup = new THREE.Group();
+       
+       // Painting plane
+       const paintingGeometry = new THREE.PlaneGeometry(4, 3);
+       const paintingMaterial = new THREE.MeshStandardMaterial({ 
+         map: texture, 
+         side: THREE.FrontSide 
+       });
+       const painting = new THREE.Mesh(paintingGeometry, paintingMaterial);
+       
+       // Frame
+       const frameThickness = 0.1;
+       const frameWidth = 4 + frameThickness * 2;
+       const frameHeight = 3 + frameThickness * 2;
+       const frameDepth = 0.2;
+       
+       const frameGeometry = new THREE.BoxGeometry(frameWidth, frameHeight, frameDepth);
+       const frameMaterial = new THREE.MeshStandardMaterial({ 
+         color: 0x8B4513, 
+         roughness: 0.5, 
+         metalness: 0.2 
+       });
+       const frame = new THREE.Mesh(frameGeometry, frameMaterial);
+       frame.position.z = -0.15;
+       
+       // Inner cutout for frame
+       const innerGeometry = new THREE.BoxGeometry(4.05, 3.05, frameDepth + 0.05);
+       const innerMaterial = new THREE.MeshBasicMaterial({ 
+         color: 0x000000, 
+         side: THREE.BackSide 
+       });
+       const innerCutout = new THREE.Mesh(innerGeometry, innerMaterial);
+       
+       frameGroup.add(frame);
+       frameGroup.add(innerCutout);
+       frameGroup.add(painting);
+       
+       object = frameGroup;
+
     }
+
+     
+    
     
     newScene.add(object);
     
     // Advanced lighting setup
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
     newScene.add(ambientLight);
     
     const spotLight = new THREE.SpotLight(0xffffff, 1);
