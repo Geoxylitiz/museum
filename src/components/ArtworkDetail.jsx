@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { artworks } from '../data/artwork';
 import gsap from 'gsap';
+import { artworks } from '../data/artwork';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import LocomotiveScroll from 'locomotive-scroll';
 import './ArtworkDetail.css';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import SceneInit from './SceneInit.js'; // Adjust the import path as needed
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -24,9 +22,7 @@ const ArtworkDetail = () => {
   const descriptionRef = useRef(null);
   const relatedRef = useRef(null);
   const cursorRef = useRef(null);
-  const [scene, setScene] = useState(null);
-  const rendererRef = useRef(null);
-  const animationFrameRef = useRef(null);
+  const sceneRef = useRef(null);
   const scrollRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
   
@@ -157,244 +153,69 @@ const ArtworkDetail = () => {
       });
     
   }, [artwork]);
-  
-  // Clean up Three.js when component changes
-  useEffect(() => {
-    if (!artwork) return;
-    
-    // Reset view mode when artwork changes
-    setViewMode('2d');
-    setIsLoading(true);
-    
-    // Clean up previous scene if any
-    if (scene) {
-      scene.dispose();
-    }
-    
-    // Clean up renderer and animation frame
-    cleanupThreeJS();
-    
-    return () => {
-      cleanupThreeJS();
-    };
-  }, [id, artwork, scene]);
 
-  // Function to clean up Three.js resources
-  const cleanupThreeJS = () => {
-    // Cancel any ongoing animation frame
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-      animationFrameRef.current = null;
-    }
-    
-    // Dispose renderer
-    if (rendererRef.current) {
-      rendererRef.current.dispose();
-      rendererRef.current = null;
-    }
-    
-    // Clear the container
-    if (threeContainer.current) {
-      threeContainer.current.innerHTML = '';
+// Clean up Three.js when component changes
+useEffect(() => {
+  if (!artwork) return;
+  
+  // Reset view mode when artwork changes
+  setViewMode('2d');
+  setIsLoading(true);
+  
+  // Clean up previous Three.js scene if any
+  if (sceneRef.current) {
+    sceneRef.current.cleanup();
+    sceneRef.current = null;
+  }
+  
+  return () => {
+    if (sceneRef.current) {
+      sceneRef.current.cleanup();
+      sceneRef.current = null;
     }
   };
-  
-  // Set up 3D view
-  useEffect(() => {
-    // Clean up 3D view when switching to 2D
-    if (viewMode === '2d') {
-      cleanupThreeJS();
-      return;
-    }
-    
-    if (!threeContainer.current || !artwork) {
-      return;
-    }
-    
-    // Enhanced 3D setup with better lighting and effects
-    const width = threeContainer.current.clientWidth;
-    const height = threeContainer.current.clientHeight;
-    
-    const newScene = new THREE.Scene();
-    newScene.background = new THREE.Color(0x111111);
-    
-    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ 
-      antialias: true,
-      alpha: true 
-    });
-    rendererRef.current = renderer;
-    
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(window.devicePixelRatio > 1 ? 2 : 1);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.outputEncoding = THREE.sRGBEncoding;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    
-    threeContainer.current.innerHTML = '';
-    threeContainer.current.appendChild(renderer.domElement);
-    
-    // Enhanced orbit controls
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.minDistance = 3;
-    controls.maxDistance = 10;
-    
-    // Create a more sophisticated 3D representation
-    let object;
-    
-    if (artwork.category === 'sculpture') {
-      // More detailed sculpture representation
-      const geometry = new THREE.SphereGeometry(2, 64, 64);
-      const material = new THREE.MeshStandardMaterial({ 
-        color: 0xFFFFFF,
-        roughness: 0.3,
-        metalness: 0.4
-      });
-      
-      // Load texture if available
-      const textureLoader = new THREE.TextureLoader();
-      textureLoader.load(artwork.imageUrl, (texture) => {
-        material.map = texture;
-        material.needsUpdate = true;
-      });
-      
-      object = new THREE.Mesh(geometry, material);
-      object.castShadow = true;
-    } else{
-       // Create a plane with the artwork texture and a frame
-       const textureLoader = new THREE.TextureLoader();
-       const texture = textureLoader.load(artwork.imageUrl);
-       
-       // Creating a frame for the painting
-       const frameGroup = new THREE.Group();
-       
-       // Painting plane
-       const paintingGeometry = new THREE.PlaneGeometry(4, 3);
-       const paintingMaterial = new THREE.MeshStandardMaterial({ 
-         map: texture, 
-         side: THREE.FrontSide 
-       });
-       const painting = new THREE.Mesh(paintingGeometry, paintingMaterial);
-       
-       // Frame
-       const frameThickness = 0.1;
-       const frameWidth = 4 + frameThickness * 2;
-       const frameHeight = 3 + frameThickness * 2;
-       const frameDepth = 0.2;
-       
-       const frameGeometry = new THREE.BoxGeometry(frameWidth, frameHeight, frameDepth);
-       const frameMaterial = new THREE.MeshStandardMaterial({ 
-         color: 0x8B4513, 
-         roughness: 0.5, 
-         metalness: 0.2 
-       });
-       const frame = new THREE.Mesh(frameGeometry, frameMaterial);
-       frame.position.z = -0.15;
-       
-       // Inner cutout for frame
-       const innerGeometry = new THREE.BoxGeometry(4.05, 3.05, frameDepth + 0.05);
-       const innerMaterial = new THREE.MeshBasicMaterial({ 
-         color: 0x000000, 
-         side: THREE.BackSide 
-       });
-       const innerCutout = new THREE.Mesh(innerGeometry, innerMaterial);
-       
-       frameGroup.add(frame);
-       frameGroup.add(innerCutout);
-       frameGroup.add(painting);
-       
-       object = frameGroup;
+}, [id, artwork]);
 
-    }
+                // Set up 3D view
+                useEffect(() => {
+                  // Clean up 3D view when switching to 2D
+                  if (viewMode === '2d') {
+                    if (sceneRef.current) {
+                      sceneRef.current.cleanup();
+                      sceneRef.current = null;
+                    }
+                    return;
+                  }
+                  
+                  if (!threeContainer.current || !artwork) {
+                    return;
+                  }
+                  
+                  // Initialize the 3D scene
+                  const scene = new SceneInit(threeContainer.current);
+                  sceneRef.current = scene;
+                  
+                  const initialized = scene.init();
+                  if (!initialized) return;
+                  
+                  // Handle different artwork types
+                  if (artwork.category === 'sculpture') {
+                    // Add special lighting for sculptures
+                    scene.addSculptureLighting();
+                    
+                    // Load the 3D model
+                    scene.loadModel('/models/roza.glb')
+                      .catch(error => console.error('Failed to load model:', error));
+                  } else {
+                    // Create a painting with frame
+                    scene.createPainting(artwork.imageUrl);
+                  }
+                  
+                  // Start the animation loop
+                  scene.startAnimation(0.001);
+                  
+                }, [viewMode, artwork]);
 
-     
-    
-    
-    newScene.add(object);
-    
-    // Advanced lighting setup
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
-    newScene.add(ambientLight);
-    
-    const spotLight = new THREE.SpotLight(0xffffff, 1);
-    spotLight.position.set(5, 8, 5);
-    spotLight.angle = Math.PI / 6;
-    spotLight.penumbra = 0.3;
-    spotLight.castShadow = true;
-    spotLight.shadow.mapSize.width = 1024;
-    spotLight.shadow.mapSize.height = 1024;
-    newScene.add(spotLight);
-    
-    const fillLight = new THREE.DirectionalLight(0xFFFFFF, 0.3);
-    fillLight.position.set(-5, 0, -5);
-    newScene.add(fillLight);
-    
-    // Create a platform/floor for the object
-    const floorGeometry = new THREE.CircleGeometry(8, 32);
-    const floorMaterial = new THREE.MeshStandardMaterial({ 
-      color: 0x222222,
-      roughness: 0.8,
-      metalness: 0.2
-    });
-    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    floor.rotation.x = -Math.PI / 2;
-    floor.position.y = -3;
-    floor.receiveShadow = true;
-    newScene.add(floor);
-    
-    // Position camera
-    camera.position.set(0, 0, 6);
-    
-    // Enhanced animation loop with gentle rotation
-    const animate = () => {
-      animationFrameRef.current = requestAnimationFrame(animate);
-      
-      if (object && viewMode === '3d') {
-        object.rotation.y += 0.001;
-      }
-      
-      controls.update();
-      renderer.render(newScene, camera);
-    };
-    
-    animate();
-    
-    // Handle window resize
-    const handleResize = () => {
-      if (!threeContainer.current) return;
-      
-      const width = threeContainer.current.clientWidth;
-      const height = threeContainer.current.clientHeight;
-      
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-      renderer.setSize(width, height);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    
-    // Cleanup function
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      cleanupThreeJS();
-      
-      // Clean up materials, geometries, etc.
-      newScene.traverse((object) => {
-        if (object.geometry) object.geometry.dispose();
-        if (object.material) {
-          if (Array.isArray(object.material)) {
-            object.material.forEach(material => material.dispose());
-          } else {
-            object.material.dispose();
-          }
-        }
-      });
-    };
-  }, [viewMode, artwork]);
-  
 // Handle back navigation with animation
 const handleBack = (e) => {
   e.preventDefault();
@@ -500,6 +321,7 @@ return (
           )}
         </div>
         
+        {/* Rest of the component remains the same */}
         <div className="artwork-info-section" ref={descriptionRef} data-scroll data-scroll-speed="0.1">
           <div className="artwork-meta">
             <div className="artwork-details">

@@ -170,13 +170,13 @@ export const artworks = [
     },
     {
       id: 12,
-      title: "Bird in Space",
-      artist: "Constantin Brâncuși",
-      year: 1932,
+      title: "Bust of Róża Loewenfeld",
+      artist: "August Rodin",
+      year: 1881,
       category: "sculpture",
-      medium: "Bronze",
+      medium: "Marble",
       dimensions: "Height: 115.6 cm",
-      description: "Bird in Space is a series of sculptures by Romanian sculptor Constantin Brâncuși. The original work was created in 1923. It was sold in 2005 for $27.5 million, at the time a record price for a sculpture sold at auction.",
+      description: "The 'Bust of Róża Loewenfeld' is a delicate and expressive sculpture by the French artist August Rodin, created in 1881. This work captures the individuality and character of Róża Loewenfeld, showcasing Rodin's exceptional skill in portraiture and his ability to bring marble to life.",
       thumbnailUrl: "./12.jpg",
       imageUrl: "/12.jpg"
     }
