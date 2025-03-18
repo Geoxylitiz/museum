@@ -8,7 +8,7 @@ html, body {
   position: fixed;
   width: 8px;
   height: 8px;
-  background-color: #000;
+  background-color: #f50404;
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;

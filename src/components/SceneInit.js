@@ -96,7 +96,7 @@ class SceneInit {
     // Create a platform/floor
     const floorGeometry = new THREE.CircleGeometry(8, 32);
     const floorMaterial = new THREE.MeshStandardMaterial({ 
-      color: 0xf2f2f2,
+      color: 0x635d4c,
       roughness: 0.8,
       metalness: 0.2
     });
@@ -129,7 +129,8 @@ class SceneInit {
         modelPath,
         (gltfScene) => {
           const model = gltfScene.scene;
-          console.log(model)
+          console.log(model);
+          
           // Process materials
           model.traverse((child) => {
             if (child.isMesh) {
@@ -139,22 +140,37 @@ class SceneInit {
             }
           });
           
-          // Position the model
-          model.position.set(0, 0.5, 0);
           
-          // Scale model if needed
+          // Calculate model size
           const box = new THREE.Box3().setFromObject(model);
           const size = box.getSize(new THREE.Vector3());
           const maxDim = Math.max(size.x, size.y, size.z);
-          if (maxDim > 4) {
-            const scale = 6 / maxDim;
+          
+          // Target size range
+          const minTargetSize = 2; // Minimum desired size
+          const maxTargetSize = 6; // Maximum desired size
+          
+          // Scale model if it's too small or too large
+          if (maxDim < minTargetSize) {
+            // Scale up small models
+            const scale = minTargetSize / maxDim;
+            console.log(`Model is too small (${maxDim}), scaling up by factor of ${scale}`);
             model.scale.set(scale, scale, scale);
+          } else if (maxDim > maxTargetSize) {
+            // Scale down large models
+            const scale = maxTargetSize / maxDim;
+            console.log(`Model is too large (${maxDim}), scaling down by factor of ${scale}`);
+            model.scale.set(scale, scale, scale);
+          } else {
+            console.log(`Model size (${maxDim}) is within acceptable range, no scaling needed`);
           }
           
+
+          
+
           this.object = model;
           this.scene.add(model);
           resolve(model);
-          console.log(model)
         },
         undefined,
         (error) => {

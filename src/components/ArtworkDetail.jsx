@@ -25,6 +25,7 @@ const ArtworkDetail = () => {
   const sceneRef = useRef(null);
   const scrollRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isHovering3D, setIsHovering3D] = useState(false);
   
   // Initialize locomotive scroll
   useEffect(() => {
@@ -92,6 +93,38 @@ const ArtworkDetail = () => {
       }
     };
   }, [artwork, isLoading]);
+  
+  // Handle 3D view hover state to disable/enable scrolling
+  useEffect(() => {
+    if (!scrollRef.current || viewMode !== '3d') return;
+    
+    if (isHovering3D) {
+      // Disable scrolling when hovering over 3D view
+      scrollRef.current.stop();
+      document.body.style.overflow = 'hidden';
+      document.documentElement.classList.add('no-scroll');
+      if (threeContainer.current) {
+        threeContainer.current.classList.add('interacting');
+      }
+    } else {
+      // Re-enable scrolling when not hovering over 3D view
+      scrollRef.current.start();
+      document.body.style.overflow = '';
+      document.documentElement.classList.remove('no-scroll');
+      if (threeContainer.current) {
+        threeContainer.current.classList.remove('interacting');
+      }
+    }
+    
+    return () => {
+      // Clean up
+      document.body.style.overflow = '';
+      document.documentElement.classList.remove('no-scroll');
+      if (scrollRef.current) {
+        scrollRef.current.start();
+      }
+    };
+  }, [isHovering3D, viewMode]);
   
   // Loading sequence
   useEffect(() => {
@@ -201,18 +234,31 @@ useEffect(() => {
                   // Handle different artwork types
                   if (artwork.category === 'sculpture') {
                     // Add special lighting for sculptures
+                   
                     scene.addSculptureLighting();
                     
                     // Load the 3D model
-                    scene.loadModel('/models/roza.glb')
+                    if(artwork.id === 12){
+                      scene.loadModel('/models/roza.glb')
                       .catch(error => console.error('Failed to load model:', error));
+                    }
+                    if(artwork.id === 6){
+                      scene.loadModel('/models/david.glb')
+                      .catch(error => console.error('Failed to load model:', error));
+                    }
+                    
+                    
+                  
+                    
                   } else {
                     // Create a painting with frame
                     scene.createPainting(artwork.imageUrl);
+                    // Start the animation loop
+                    scene.startAnimation(0.001);
                   }
-                  
-                  // Start the animation loop
-                  scene.startAnimation(0.001);
+          // Start the animation loop
+          artwork.category === "sculpture" ? scene.startAnimation(0.000) : scene.startAnimation(0.001);
+                 
                   
                 }, [viewMode, artwork]);
 
@@ -313,7 +359,12 @@ return (
             </div>
           )}
           {viewMode === '3d' && (
-            <div className="artwork-3d" ref={threeContainer}>
+            <div 
+              className="artwork-3d" 
+              ref={threeContainer}
+              onMouseEnter={() => setIsHovering3D(true)}
+              onMouseLeave={() => setIsHovering3D(false)}
+            >
               <div className="three-instructions">
                 <p>Click and drag to rotate • Scroll to zoom</p>
               </div>

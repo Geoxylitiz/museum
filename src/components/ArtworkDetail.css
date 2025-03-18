@@ -276,6 +276,7 @@ body {
   opacity: 0.8;
 }
 
+/* Artwork 3D View */
 .artwork-3d {
   position: relative;
   cursor: grab;
@@ -283,6 +284,19 @@ body {
   width: 100%;
   background-color: var(--primary-color);
   border-radius: 0.5rem;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.artwork-3d:hover {
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.25);
+}
+
+.artwork-3d:active {
+  cursor: grabbing;
+}
+
+.artwork-3d.interacting {
+  z-index: 10;
 }
 
 .three-instructions {
@@ -296,6 +310,22 @@ body {
   opacity: 1;
   pointer-events: none;
   z-index: 1;
+  transition: opacity 0.3s ease;
+}
+
+.artwork-3d:hover .three-instructions {
+  opacity: 1;
+}
+
+/* Add this for when the document has the no-scroll class */
+html.no-scroll {
+  overflow: hidden !important;
+}
+html.no-scroll [data-scroll-container] {
+  pointer-events: none;
+}
+html.no-scroll .artwork-3d {
+  pointer-events: auto;
 }
 
 /* Artwork Info Section */
