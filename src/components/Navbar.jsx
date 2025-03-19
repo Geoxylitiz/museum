@@ -86,9 +86,7 @@ const Navbar = () => {
         <div className="menu-content">
           <div className="menu-links">
             <Link to="/" className="menu-link" onClick={toggleMenu}>Home</Link>
-            <Link to="/projects" className="menu-link" onClick={toggleMenu}>Projects</Link>
             <Link to="/about" className="menu-link" onClick={toggleMenu}>About</Link>
-            <Link to="/approach" className="menu-link" onClick={toggleMenu}>Approach</Link>
             <Link to="/contact" className="menu-link" onClick={toggleMenu}>Contact</Link>
           </div>
           <div className="menu-footer">

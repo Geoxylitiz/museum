@@ -65,7 +65,7 @@ const ArtworkDetail = () => {
     const sections = [
       { ref: imageContainerRef, delay: 0 },
       { ref: descriptionRef, delay: 0.2 },
-      { ref: relatedRef, delay: 0.4 }
+      { ref: relatedRef, delay: 0.2 }
     ];
     
     sections.forEach(({ ref, delay }) => {
@@ -242,22 +242,28 @@ useEffect(() => {
                       scene.loadModel('/models/roza.glb')
                       .catch(error => console.error('Failed to load model:', error));
                     }
-                    if(artwork.id === 6){
+                    else if(artwork.id === 6){
                       scene.loadModel('/models/david.glb')
                       .catch(error => console.error('Failed to load model:', error));
                     }
-                    
+                    else if(artwork.id === 3){
+                      scene.loadModel('/models/thinker.glb')
+                      .catch(error => console.error('Failed to load model:', error));
+                    }
+                    else if(artwork.id === 9){
+                      scene.loadModel('/models/bernard.glb')
+                      .catch(error => console.error('Failed to load model:', error));
+                    }
                     
                   
                     
                   } else {
                     // Create a painting with frame
                     scene.createPainting(artwork.imageUrl);
-                    // Start the animation loop
-                    scene.startAnimation(0.001);
+    
                   }
-          // Start the animation loop
-          artwork.category === "sculpture" ? scene.startAnimation(0.000) : scene.startAnimation(0.001);
+                  // Start the animation loop
+                  scene.startAnimation(0.001);
                  
                   
                 }, [viewMode, artwork]);
@@ -447,7 +453,7 @@ return (
               <Link to="/artists" className="footer-link">Artists</Link>
             </div>
             <div className="footer-copyright">
-              <p>© {new Date().getFullYear()} Modern Art Gallery. All rights reserved.</p>
+              <p>© {new Date().getFullYear()} TEAM 0-7. All rights reserved.</p>
             </div>
           </div>
         </footer>

@@ -134,13 +134,13 @@ export const artworks = [
     },
     {
       id: 9,
-      title: "Venus de Milo",
-      artist: "Alexandros of Antioch",
-      year: -120,
+      title: "Vector d'e Bernardo",
+      artist: "Godwyn Aquino",
+      year: 2025,
       category: "sculpture",
       medium: "Marble",
       dimensions: "Height: 203 cm",
-      description: "The Venus de Milo is an ancient Greek statue and one of the most famous works of ancient Greek sculpture. Created sometime between 130 and 100 BC, it is believed to depict Aphrodite, the Greek goddess of love and beauty.",
+      description: "John VECTOR Bernardo is an ancient Greek statue and one of the most famous works of ancient Greek sculpture. Created sometime between MARCH 10 and 24, it is believed to depict Aphrodite, the Greek goddess of love and beauty.",
       thumbnailUrl: "./9.jpg",
       imageUrl: "/9.jpg"
     },

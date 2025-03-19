@@ -4,6 +4,8 @@ import Gallery from './components/Gallery';
 import ArtworkDetail from './components/ArtworkDetail';
 import Navbar from './components/Navbar';
 import Cursor from './components/Cursor';
+import About from './components/about';
+import Contact from './components/contact';
 import './App.css';
 
 function App() {
@@ -15,6 +17,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Gallery />} />
           <Route path="/artwork/:id" element={<ArtworkDetail />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </div>
     </Router>
