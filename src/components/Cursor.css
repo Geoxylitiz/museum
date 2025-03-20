@@ -8,7 +8,7 @@ html, body {
   position: fixed;
   width: 8px;
   height: 8px;
-  background-color: #f50404;
+  background-color: #907f7f;
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
@@ -22,6 +22,7 @@ html, body {
   width: 40px;
   height: 40px;
   border: 1px solid rgba(0, 0, 0, 0.5);
+  background-color: #bfb8b869;
   border-radius: 50%;
   pointer-events: none;
   z-index: 9998;

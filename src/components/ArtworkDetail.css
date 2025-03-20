@@ -36,8 +36,6 @@ body {
   outline-offset: 2px;
 }
 
-
-
 /* Loading overlay */
 .loading-overlay {
   position: fixed;
@@ -51,6 +49,7 @@ body {
   justify-content: center;
   z-index: 9999;
   opacity: 0;
+  visibility: hidden;
 }
 
 .loading-content {
@@ -240,8 +239,6 @@ body {
   transition: transform var(--transition-medium);
 }
 
-
-
 .image-overlay {
   position: absolute;
   bottom: 0;
@@ -279,7 +276,6 @@ body {
 /* Artwork 3D View */
 .artwork-3d {
   position: relative;
-  cursor: grab;
   height: 100%;
   width: 100%;
   background-color: var(--primary-color);

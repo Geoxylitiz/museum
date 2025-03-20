@@ -5,7 +5,9 @@ import { artworks } from '../data/artwork';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import LocomotiveScroll from 'locomotive-scroll';
 import './ArtworkDetail.css';
+import { useGSAP } from '@gsap/react';
 import SceneInit from './SceneInit.js'; // Adjust the import path as needed
+
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -26,9 +28,12 @@ const ArtworkDetail = () => {
   const scrollRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isHovering3D, setIsHovering3D] = useState(false);
+  const loadingOverlayRef = useRef(null);
+  const loadingProgressRef = useRef(null);
+  const contentRef = useRef(null);
   
   // Initialize locomotive scroll
-  useEffect(() => {
+  useGSAP(() => {
     if (!artwork || isLoading) return;
     
     // Initialize locomotive scroll after loading
@@ -130,59 +135,47 @@ const ArtworkDetail = () => {
   useEffect(() => {
     if (!artwork) return;
     
+    // Initially hide the main content
+    if (contentRef.current) {
+      gsap.set(contentRef.current, { 
+        opacity: 0,
+        visibility: 'hidden'
+      });
+    }
+    
     const loadingTimeline = gsap.timeline({
       onComplete: () => {
         setIsLoading(false);
         
-        // Start entrance animations once loading is complete
-        const entranceTimeline = gsap.timeline();
+        // Show content after loading completes
+        if (contentRef.current) {
+          gsap.to(contentRef.current, {
+            opacity: 1,
+            visibility: 'visible',
+            duration: 0.5
+          });
+        }
         
-        entranceTimeline
-          .from('.artwork-title', {
-            y: 100,
-            opacity: 0,
-            duration: 1.2,
-            ease: 'power3.out',
-            clearProps: 'all'
-          })
-          .from('.artwork-artist', {
-            y: 50,
-            opacity: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            clearProps: 'all'
-          }, '-=0.8')
-          .from('.view-options', {
-            y: 30,
-            opacity: 0,
-            duration: 0.6,
-            ease: 'power3.out',
-            clearProps: 'all'
-          }, '-=0.6')
-          .from('.back-button', {
-            x: -30,
-            opacity: 0,
-            duration: 0.6,
-            ease: 'power3.out',
-            clearProps: 'all'
-          }, '-=0.6');
+        
       }
     });
     
     loadingTimeline
-      .to('.loading-overlay', {
+      .to(loadingOverlayRef.current, {
         duration: 0.5,
-        opacity: 1
+        opacity: 1,
+        visibility: 'visible'
       })
-      .to('.loading-progress', {
+      .to(loadingProgressRef.current, {
         width: '100%',
         duration: 1.5,
         ease: 'power2.inOut'
       })
-      .to('.loading-overlay', {
+      .to(loadingOverlayRef.current, {
         opacity: 0,
         duration: 0.5,
-        pointerEvents: 'none'
+        pointerEvents: 'none',
+        visibility: 'hidden'
       });
     
   }, [artwork]);
@@ -314,149 +307,151 @@ if (!artwork) {
 return (
   <>
     {/* Loading overlay */}
-    <div className="loading-overlay">
+    <div className="loading-overlay" ref={loadingOverlayRef}>
       <div className="loading-content">
         <h2>{artwork.title}</h2>
         <div className="loading-bar">
-          <div className="loading-progress"></div>
+          <div className="loading-progress" ref={loadingProgressRef}></div>
         </div>
       </div>
     </div>
     
-    <div className="artwork-detail-wrapper" ref={detailRef} data-scroll-container>
-      <header className="artwork-nav" ref={headerRef}>
-        <Link to="/" className="back-button" onClick={handleBack}>
-          <span className="back-icon">←</span>
-          <span className="back-text">Gallery</span>
-        </Link>
-      </header>
-      
-      <div className="artwork-detail-container">
-        <div className="artwork-detail-header">
-          <h1 className="artwork-title">{artwork.title}</h1>
-          <h2 className="artwork-artist">by {artwork.artist}, {artwork.year}</h2>
-          
-          <div className="view-options">
-            <button 
-              className={viewMode === '2d' ? 'active' : ''} 
-              onClick={() => setViewMode('2d')}
-            >
-              2D View
-            </button>
-            <button 
-              className={viewMode === '3d' ? 'active' : ''} 
-              onClick={() => setViewMode('3d')}
-            >
-              3D View
-            </button>
-          </div>
-        </div>
+    {/* Main content - initially hidden */}
+    <div ref={contentRef} style={{ opacity: 0, visibility: 'hidden' }}>
+      <div className="artwork-detail-wrapper" ref={detailRef} data-scroll-container>
+        <header className="artwork-nav" ref={headerRef}>
+          <Link to="/" className="back-button" onClick={handleBack}>
+            <span className="back-icon">←</span>
+            <span className="back-text">Gallery</span>
+          </Link>
+        </header>
         
-        <div className="artwork-display" ref={imageContainerRef} data-scroll data-scroll-speed="0.3">
-          {viewMode === '2d' && (
-            <div className="artwork-image">
-              <img src={artwork.imageUrl} alt={artwork.title} />
-              <div className="image-overlay">
-                <div className="overlay-content">
-                  <span className="overlay-title">{artwork.title}</span>
-                  <span className="overlay-year">{artwork.year}</span>
+        <div className="artwork-detail-container">
+          <div className="artwork-detail-header">
+            <h1 className="artwork-title">{artwork.title}</h1>
+            <h2 className="artwork-artist">by {artwork.artist}, {artwork.year}</h2>
+            
+            <div className="view-options">
+              <button 
+                className={viewMode === '2d' ? 'active' : ''} 
+                onClick={() => setViewMode('2d')}
+              >
+                2D View
+              </button>
+              <button 
+                className={viewMode === '3d' ? 'active' : ''} 
+                onClick={() => setViewMode('3d')}
+              >
+                3D View
+              </button>
+            </div>
+          </div>
+          
+          <div className="artwork-display" ref={imageContainerRef} data-scroll data-scroll-speed="0.3">
+            {viewMode === '2d' && (
+              <div className="artwork-image">
+                <img src={artwork.imageUrl} alt={artwork.title} />
+                <div className="image-overlay">
+                  <div className="overlay-content">
+                    <span className="overlay-title">{artwork.title}</span>
+                    <span className="overlay-year">{artwork.year}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-          {viewMode === '3d' && (
-            <div 
-              className="artwork-3d" 
-              ref={threeContainer}
-              onMouseEnter={() => setIsHovering3D(true)}
-              onMouseLeave={() => setIsHovering3D(false)}
-            >
-              <div className="three-instructions">
-                <p>Click and drag to rotate • Scroll to zoom</p>
+            )}
+            {viewMode === '3d' && (
+              <div 
+                className="artwork-3d" 
+                ref={threeContainer}
+                onMouseEnter={() => setIsHovering3D(true)}
+                onMouseLeave={() => setIsHovering3D(false)}
+              >
+                <div className="three-instructions">
+                  <p>Click and drag to rotate • Scroll to zoom</p>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-        
-        {/* Rest of the component remains the same */}
-        <div className="artwork-info-section" ref={descriptionRef} data-scroll data-scroll-speed="0.1">
-          <div className="artwork-meta">
-            <div className="artwork-details">
-              <div className="detail-item">
-                <span className="detail-label">Category</span>
-                <span className="detail-value">{artwork.category}</span>
+            )}
+          </div>
+          
+          <div className="artwork-info-section" ref={descriptionRef} data-scroll data-scroll-speed="0.1">
+            <div className="artwork-meta">
+              <div className="artwork-details">
+                <div className="detail-item">
+                  <span className="detail-label">Category</span>
+                  <span className="detail-value">{artwork.category}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Medium</span>
+                  <span className="detail-value">{artwork.medium}</span>
+                </div>
+                <div className="detail-item">
+                  <span className="detail-label">Dimensions</span>
+                  <span className="detail-value">{artwork.dimensions}</span>
+                </div>
               </div>
-              <div className="detail-item">
-                <span className="detail-label">Medium</span>
-                <span className="detail-value">{artwork.medium}</span>
-              </div>
-              <div className="detail-item">
-                <span className="detail-label">Dimensions</span>
-                <span className="detail-value">{artwork.dimensions}</span>
+              
+              <div className="artwork-quote">
+                <blockquote>"{artwork.title}" captures the essence of {artwork.artist}'s vision.</blockquote>
               </div>
             </div>
             
-            <div className="artwork-quote">
-              <blockquote>"{artwork.title}" captures the essence of {artwork.artist}'s vision.</blockquote>
+            <div className="artwork-description">
+              <h3>About this piece</h3>
+              <p>{artwork.description}</p>
+              
+              <div className="artwork-analysis">
+                <h4>Artistic Analysis</h4>
+                <p>
+                  This {artwork.category} exemplifies {artwork.artist}'s unique approach to 
+                  {artwork.medium.toLowerCase()} as a medium, demonstrating technical mastery 
+                  and conceptual depth that characterizes their work from this period.
+                </p>
+              </div>
             </div>
           </div>
           
-          <div className="artwork-description">
-            <h3>About this piece</h3>
-            <p>{artwork.description}</p>
-            
-            <div className="artwork-analysis">
-              <h4>Artistic Analysis</h4>
-              <p>
-                This {artwork.category} exemplifies {artwork.artist}'s unique approach to 
-                {artwork.medium.toLowerCase()} as a medium, demonstrating technical mastery 
-                and conceptual depth that characterizes their work from this period.
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        {relatedArtworks.length > 0 && (
-          <div className="related-artworks" ref={relatedRef} data-scroll data-scroll-speed="0.05">
-            <h3>
-              <span className="heading-line"></span>
-              <span className="heading-text">Related Works</span>
-            </h3>
-            <div className="related-grid">
-              {relatedArtworks.map(related => (
-                <Link 
-                  to={`/artwork/${related.id}`} 
-                  key={related.id} 
-                  className="related-item"
-                >
-                  <div className="related-image-container">
-                    <img src={related.imageUrl} alt={related.title} />
-                    <div className="related-hover-overlay">
-                      <span>View Details</span>
+          {relatedArtworks.length > 0 && (
+            <div className="related-artworks" ref={relatedRef} data-scroll data-scroll-speed="0.05">
+              <h3>
+                <span className="heading-line"></span>
+                <span className="heading-text">Related Works</span>
+              </h3>
+              <div className="related-grid">
+                {relatedArtworks.map(related => (
+                  <Link 
+                    to={`/artwork/${related.id}`} 
+                    key={related.id} 
+                    className="related-item"
+                  >
+                    <div className="related-image-container">
+                      <img src={related.imageUrl} alt={related.title} />
+                      <div className="related-hover-overlay">
+                        <span>View Details</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="related-info">
-                    <h4>{related.title}</h4>
-                    <p>{related.artist}, {related.year}</p>
-                  </div>
-                </Link>
-              ))}
+                    <div className="related-info">
+                      <h4>{related.title}</h4>
+                      <p>{related.artist}, {related.year}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-        
-        <footer className="artwork-footer">
-          <div className="footer-content">
-            <div className="footer-navigation">
-              <Link to="/" className="footer-link">Home</Link>
-              <Link to="/collection" className="footer-link">Collection</Link>
-              <Link to="/artists" className="footer-link">Artists</Link>
+          )}
+          
+          <footer className="artwork-footer">
+            <div className="footer-content">
+              <div className="footer-navigation">
+                <Link to="/" className="footer-link">Home</Link>
+                <Link to="/collection" className="footer-link">Collection</Link>
+                <Link to="/artists" className="footer-link">Artists</Link>
+              </div>
+              <div className="footer-copyright">
+                <p>© {new Date().getFullYear()} TEAM 0-7. All rights reserved.</p>
+              </div>
             </div>
-            <div className="footer-copyright">
-              <p>© {new Date().getFullYear()} TEAM 0-7. All rights reserved.</p>
-            </div>
-          </div>
-        </footer>
+          </footer>
+        </div>
       </div>
     </div>
   </>
