@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { artworks } from '../data/artwork';
 import { useGalleryAnimations } from '../hooks/useGalleryAnimations';
@@ -7,12 +7,25 @@ import './Gallery.css';
 const Gallery = () => {
   const scrollRef = useRef(null);
   const galleryRef = useRef(null);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  
+  // Shuffle artworks to create an unordered layout
+  const shuffledArtworks = [...artworks].sort();
+  
+  // Track loaded images
+  useEffect(() => {
+    // Setting a small delay to ensure we don't show a loading state for very fast loads
+    const timer = setTimeout(() => {
+      if (!imagesLoaded) {
+        setImagesLoaded(true);
+      }
+    }, 2500);
+    
+    return () => clearTimeout(timer);
+  }, []);
   
   // Use our custom hook for animations
   useGalleryAnimations(scrollRef, galleryRef);
-
-  // Shuffle artworks to create an unordered layout
-  const shuffledArtworks = [...artworks].sort();
 
   return (
     <div className="scroll-container" ref={scrollRef} data-scroll-container>
@@ -33,7 +46,16 @@ const Gallery = () => {
             >
               <div className="artwork-card">
                 <div className="artwork-image-container">
-                  <img src={artwork.thumbnailUrl} alt={artwork.title} />
+                  <img 
+                    src={artwork.thumbnailUrl} 
+                    alt={artwork.title} 
+                    loading="lazy"
+                    decoding="async"
+                    onLoad={(e) => {
+                      // Add a class to handle fade-in once loaded
+                      e.target.classList.add('img-loaded');
+                    }}
+                  />
                   <div className="artwork-overlay">
                     <h3>{artwork.title}</h3>
                     <p>{artwork.artist}, {artwork.year}</p>

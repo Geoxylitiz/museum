@@ -26,78 +26,13 @@ const ArtworkDetail = () => {
   const cursorRef = useRef(null);
   const sceneRef = useRef(null);
   const scrollRef = useRef(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [isHovering3D, setIsHovering3D] = useState(false);
   const loadingOverlayRef = useRef(null);
   const loadingProgressRef = useRef(null);
   const contentRef = useRef(null);
   
-  // Initialize locomotive scroll
-  useGSAP(() => {
-    if (!artwork || isLoading) return;
-    
-    // Initialize locomotive scroll after loading
-    scrollRef.current = new LocomotiveScroll({
-      el: document.querySelector('[data-scroll-container]'),
-      smooth: true,
-      multiplier: 0.8,
-      smartphone: {
-        smooth: true
-      },
-      tablet: {
-        smooth: true
-      }
-    });
-    
-    // Update locomotive scroll
-    ScrollTrigger.scrollerProxy('[data-scroll-container]', {
-      scrollTop(value) {
-        return arguments.length 
-          ? scrollRef.current.scrollTo(value, 0, 0) 
-          : scrollRef.current.scroll.instance.scroll.y;
-      },
-      getBoundingClientRect() {
-        return {
-          top: 0,
-          left: 0,
-          width: window.innerWidth,
-          height: window.innerHeight
-        };
-      }
-    });
-    
-    // Set up scroll-based animations
-    const sections = [
-      { ref: imageContainerRef, delay: 0 },
-      { ref: descriptionRef, delay: 0.2 },
-      { ref: relatedRef, delay: 0.2 }
-    ];
-    
-    sections.forEach(({ ref, delay }) => {
-      if (!ref.current) return;
-      
-      ScrollTrigger.create({
-        trigger: ref.current,
-        scroller: '[data-scroll-container]',
-        start: 'top bottom-=100',
-        onEnter: () => {
-          gsap.fromTo(ref.current,
-            { y: 100, opacity: 0 },
-            { y: 0, opacity: 1, duration: 1.2, delay, ease: 'power3.out' }
-          );
-        },
-        once: true
-      });
-    });
-    
-    // Clean up
-    return () => {
-      if (scrollRef.current) {
-        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-        scrollRef.current.destroy();
-      }
-    };
-  }, [artwork, isLoading]);
+  
+  
   
   // Handle 3D view hover state to disable/enable scrolling
   useEffect(() => {
@@ -145,7 +80,7 @@ const ArtworkDetail = () => {
     
     const loadingTimeline = gsap.timeline({
       onComplete: () => {
-        setIsLoading(false);
+  
         
         // Show content after loading completes
         if (contentRef.current) {
@@ -186,7 +121,6 @@ useEffect(() => {
   
   // Reset view mode when artwork changes
   setViewMode('2d');
-  setIsLoading(true);
   
   // Clean up previous Three.js scene if any
   if (sceneRef.current) {
