@@ -12,7 +12,7 @@ const Gallery = () => {
   useGalleryAnimations(scrollRef, galleryRef);
 
   // Shuffle artworks to create an unordered layout
-  const shuffledArtworks = [...artworks].sort(() => Math.random() - 0.5);
+  const shuffledArtworks = [...artworks].sort();
 
   return (
     <div className="scroll-container" ref={scrollRef} data-scroll-container>
@@ -29,7 +29,7 @@ const Gallery = () => {
               key={artwork.id} 
               className={`artwork-item artwork-item-${artwork.id}`}
               data-scroll
-              data-scroll-speed={Math.random() * 0.5 + 0.1}
+              data-scroll-speed={0.3}
             >
               <div className="artwork-card">
                 <div className="artwork-image-container">

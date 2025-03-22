@@ -6,8 +6,6 @@ import imagesLoaded from 'imagesloaded';
 
 export const useGalleryAnimations = (scrollRef, galleryRef) => {
   useGSAP(() => {
-    // Make sure items are visible initially, then animate them
-    gsap.set('.artwork-item', { opacity: 1, y: 0 });
     
     // Initialize locomotive scroll
     const locoScroll = new LocomotiveScroll({
@@ -21,20 +19,12 @@ export const useGalleryAnimations = (scrollRef, galleryRef) => {
       tablet: {
         smooth: true
       },
-      reloadOnContextChange: true
+      reloadOnContextChange: false
     });
 
   
 
-    // Wait for images to load before initializing animations
-    const imgLoad = imagesLoaded(galleryRef.current);
     
-    imgLoad.on('always', () => {
-      // Refresh locomotive scroll
-      locoScroll.update();
-
-      // Create scroll-triggered animations for each artwork item
-    });
 
     // Handle resize
     const handleResize = () => {
