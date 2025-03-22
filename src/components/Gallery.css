@@ -19,7 +19,6 @@ html.has-scroll-dragging {
   width: 100%;
   min-height: 100vh;
   overflow: hidden;
-  will-change: transform;
 }
 
 /* Gallery Styles */
@@ -65,8 +64,6 @@ html.has-scroll-dragging {
   color: inherit;
   overflow: hidden;
   position: relative;
-  will-change: transform;
-  transform: translateZ(0);
 }
 
 /* Create different sized grid items */
@@ -117,16 +114,6 @@ html.has-scroll-dragging {
   height: 100%;
   object-fit: cover;
   transition: transform 1.2s cubic-bezier(0.215, 0.61, 0.355, 1);
-  will-change: transform;
-  transform: translateZ(0);
-  opacity: 0;
-  filter: blur(5px);
-}
-
-.artwork-card img.img-loaded {
-  opacity: 1;
-  filter: blur(0);
-  transition: opacity 0.5s ease, filter 0.5s ease, transform 1.2s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 
 .artwork-overlay {
@@ -155,7 +142,7 @@ html.has-scroll-dragging {
 
 /* Hover Effects */
 .artwork-item:hover .artwork-card img {
-  transform: scale(1.05);
+  transform: translateY(-10px);
 }
 
 .artwork-item:hover .artwork-overlay {
@@ -194,24 +181,6 @@ html.has-scroll-dragging {
 .is-revealed {
   opacity: 1;
   transform: translateY(0);
-  will-change: opacity, transform;
-}
-
-/* Helper classes for performance optimization */
-.hardware-accelerated {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-/* Apply hardware acceleration to key animated elements */
-[data-scroll], 
-[data-scroll-speed],
-.gallery-header,
-.artwork-item {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
 }
 
 /* Remove filter options from original design */
