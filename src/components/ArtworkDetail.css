@@ -116,7 +116,7 @@ body {
   font-size: 1rem;
   padding: 0.7rem 1.2rem;
   border-radius: 2rem;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgb(13, 13, 13);
   backdrop-filter: blur(10px);
   transition: transform var(--transition-fast), background-color var(--transition-fast);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -124,7 +124,7 @@ body {
 
 .back-button:hover {
   transform: translateY(-2px);
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(133, 137, 115, 0.838);
 }
 
 .back-icon {
