@@ -2,15 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import gsap from 'gsap';
 import { artworks } from '../data/artwork';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import LocomotiveScroll from 'locomotive-scroll';
 import './ArtworkDetail.css';
 import { useGSAP } from '@gsap/react';
 import SceneInit from './SceneInit.js'; // Adjust the import path as needed
-
-
-// Register GSAP plugins
-gsap.registerPlugin(ScrollTrigger);
+import { useLocomotive } from '../hooks/useLocomotive.js'
 
 const ArtworkDetail = () => {
   const { id } = useParams();
@@ -31,16 +26,16 @@ const ArtworkDetail = () => {
   const loadingProgressRef = useRef(null);
   const contentRef = useRef(null);
   
-  
-  
+  // Initialize Locomotive Scroll and get the instance
+  const locomotiveInstance = useLocomotive(scrollRef);
   
   // Handle 3D view hover state to disable/enable scrolling
   useEffect(() => {
-    if (!scrollRef.current || viewMode !== '3d') return;
+    if (!locomotiveInstance || viewMode !== '3d') return;
     
     if (isHovering3D) {
       // Disable scrolling when hovering over 3D view
-      scrollRef.current.stop();
+      locomotiveInstance.stop();
       document.body.style.overflow = 'hidden';
       document.documentElement.classList.add('no-scroll');
       if (threeContainer.current) {
@@ -48,7 +43,7 @@ const ArtworkDetail = () => {
       }
     } else {
       // Re-enable scrolling when not hovering over 3D view
-      scrollRef.current.start();
+      locomotiveInstance.start();
       document.body.style.overflow = '';
       document.documentElement.classList.remove('no-scroll');
       if (threeContainer.current) {
@@ -60,14 +55,14 @@ const ArtworkDetail = () => {
       // Clean up
       document.body.style.overflow = '';
       document.documentElement.classList.remove('no-scroll');
-      if (scrollRef.current) {
-        scrollRef.current.start();
+      if (locomotiveInstance) {
+        locomotiveInstance.start();
       }
     };
-  }, [isHovering3D, viewMode]);
+  }, [isHovering3D, viewMode, locomotiveInstance]);
   
   // Loading sequence
-  useEffect(() => {
+  useGSAP(() => {
     if (!artwork) return;
     
     // Initially hide the main content
@@ -77,7 +72,6 @@ const ArtworkDetail = () => {
         visibility: 'hidden'
       });
     }
-    
     const loadingTimeline = gsap.timeline({
       onComplete: () => {
   
@@ -252,15 +246,15 @@ return (
     
     {/* Main content - initially hidden */}
     <div ref={contentRef} style={{ opacity: 0, visibility: 'hidden' }}>
-      <div className="artwork-detail-wrapper" ref={detailRef} data-scroll-container>
-        <header className="artwork-nav" ref={headerRef}>
-          <Link to="/" className="back-button" onClick={handleBack}>
-            <span className="back-icon">←</span>
-            <span className="back-text">Gallery</span>
-          </Link>
-        </header>
-        
-        <div className="artwork-detail-container">
+      <div className="artwork-detail-wrapper" ref={detailRef}>
+        <div className="artwork-detail-container" ref={scrollRef} data-scroll-container>
+          <header className="artwork-nav" ref={headerRef}>
+            <Link to="/" className="back-button" onClick={handleBack}>
+              <span className="back-icon">←</span>
+              <span className="back-text">Gallery</span>
+            </Link>
+          </header>
+          
           <div className="artwork-detail-header">
             <h1 className="artwork-title">{artwork.title}</h1>
             <h2 className="artwork-artist">by {artwork.artist}, {artwork.year}</h2>
@@ -377,8 +371,8 @@ return (
             <div className="footer-content">
               <div className="footer-navigation">
                 <Link to="/" className="footer-link">Home</Link>
-                <Link to="/collection" className="footer-link">Collection</Link>
-                <Link to="/artists" className="footer-link">Artists</Link>
+                <Link to="/about" className="footer-link">About</Link>
+                <Link to="/contact" className="footer-link">Contact us</Link>
               </div>
               <div className="footer-copyright">
                 <p>© {new Date().getFullYear()} TEAM 0-7. All rights reserved.</p>

@@ -1,18 +1,17 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { artworks } from '../data/artwork';
-import { useGalleryAnimations } from '../hooks/useGalleryAnimations';
+import { useLocomotive } from '../hooks/useLocomotive';
 import './Gallery.css';
 
 const Gallery = () => {
   const scrollRef = useRef(null);
-  const galleryRef = useRef(null);
   
   // Use our custom hook for animations
-  useGalleryAnimations(scrollRef, galleryRef);
+  useLocomotive(scrollRef);
 
-  // Shuffle artworks to create an unordered layout
-  const shuffledArtworks = [...artworks].sort();
+  // Properly shuffle artworks to create a random layout
+  const Artworkz = [...artworks].sort();
 
   return (
     <div className="scroll-container" ref={scrollRef} data-scroll-container>
@@ -22,8 +21,8 @@ const Gallery = () => {
           <p className="gallery-subtitle">Explore our curated collection of exceptional artworks</p>
         </div>
 
-        <div className="gallery-grid" ref={galleryRef}>
-          {shuffledArtworks.map((artwork) => (
+        <div className="gallery-grid">
+          {Artworkz.map((artwork) => (
             <Link 
               to={`/artwork/${artwork.id}`} 
               key={artwork.id} 

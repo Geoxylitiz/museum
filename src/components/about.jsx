@@ -1,68 +1,13 @@
 import React, { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './about.css';
-
-// Register GSAP plugins
-gsap.registerPlugin(ScrollTrigger);
+import { useLocomotive } from '../hooks/useLocomotive';
 
 const About = () => {
+ 
   const scrollRef = useRef(null);
-  const teamRef = useRef(null);
   
-  useEffect(() => {
-    // Animation for section headings
-    gsap.from('.about-heading', {
-      y: 50,
-      opacity: 100,
-      duration: 1.2,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: '.about-section',
-        start: 'top 70%',
-      }
-    });
-    
-    // Animation for about content
-    gsap.from('.about-content', {
-      y: 30,
-      opacity: 100,
-      duration: 1,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: '.about-content',
-        start: 'top 80%',
-      }
-    });
-    
-    // Animation for team members
-    gsap.from('.team-member', {
-      y: 40,
-      opacity: 100,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: teamRef.current,
-        start: 'top 75%',
-      }
-    });
-    
-    // Animation for values items
-    gsap.from('.values-item', {
-      y: 30,
-      opacity: 100,
-      duration: 0.7,
-      stagger: 0.15,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: '.values-grid',
-        start: 'top 80%',
-      }
-    });
-  }, []);
-  
+  useLocomotive(scrollRef);
+
   return (
     <div className="scroll-container" ref={scrollRef} data-scroll-container>
       <div className="about-container" data-scroll-section>
@@ -89,7 +34,9 @@ const About = () => {
           </div>
           
           <div className="about-image" data-scroll data-scroll-speed="0.3">
-            <div className="image-placeholder"></div>
+            <div className="image-placeholder">
+              <img src={'/team/bernard.png'} alt="About Us" />
+            </div>
           </div>
         </section>
         
@@ -117,21 +64,27 @@ const About = () => {
         </section>
         
         {/* Team Section */}
-        <section className="team-section" ref={teamRef}>
+        <section className="team-section">
           <h2 className="about-heading">Our Team</h2>
           <div className="team-grid">
             <div className="team-member">
-              <div className="member-image"></div>
+              <div className="member-image">
+                <img src={'/team/bernard.png'} alt="Bernard VECTOR King" />
+              </div>
               <h3>Bernard VECTOR King</h3>
               <p>Founder & Creative Director</p>
             </div>
             <div className="team-member">
-              <div className="member-image"></div>
+              <div className="member-image">
+                <img src={'/team/justine.png'} alt="Justine Llamera" />
+              </div>
               <h3>Justine Llamera</h3>
               <p>Technology Lead</p>
             </div>
             <div className="team-member">
-              <div className="member-image"></div>
+              <div className="member-image">
+                <img src={'/team/jc.png'} alt="Jc D. Laput" />
+              </div>
               <h3>Jc D. Laput</h3>
               <p>Curator</p>
             </div>
