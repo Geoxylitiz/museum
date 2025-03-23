@@ -20,7 +20,7 @@ html.has-scroll-dragging {
   overflow: hidden;
 }
 
-/* Intro Animation */
+/* Enhanced Intro Animation */
 .intro-animation {
   position: fixed;
   top: 0;
@@ -28,9 +28,9 @@ html.has-scroll-dragging {
   width: 100%;
   height: 100vh;
   z-index: 1000;
-  background-color: #000;
+  background-color: #080808;
   overflow: hidden;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.8s ease;
 }
 
 .intro-animation.completed {
@@ -38,10 +38,85 @@ html.has-scroll-dragging {
   pointer-events: none;
 }
 
+/* Dark backdrop with gradient */
+.intro-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, #181818 0%, #050505 80%);
+  opacity: 1;
+}
+
+/* Pattern overlay for texture */
+.pattern-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1.5s ease 1s;
+  z-index: 2;
+}
+
+.intro-animation.active .pattern-overlay {
+  opacity: 1;
+}
+
+.pattern-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Floating particles */
+.particles-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.particle:nth-child(odd) {
+  background-color: rgba(255, 255, 255, 0.1);
+  width: 6px;
+  height: 6px;
+}
+
+.particle:nth-child(3n) {
+  background-color: rgba(200, 200, 255, 0.15);
+  width: 3px;
+  height: 3px;
+}
+
+.particle:nth-child(5n) {
+  background-color: rgba(255, 235, 200, 0.1);
+  width: 5px;
+  height: 5px;
+}
+
+.intro-animation.active .particle {
+  opacity: 0.5;
+}
+
+/* Sliding frames with improved animation */
 .intro-frames {
   position: absolute;
   width: 100%;
   height: 100%;
+  z-index: 4;
 }
 
 .frame {
@@ -80,6 +155,7 @@ html.has-scroll-dragging {
   transform: translateX(0);
 }
 
+/* Main content container with improved positioning */
 .intro-content {
   position: absolute;
   top: 0;
@@ -93,18 +169,31 @@ html.has-scroll-dragging {
   color: #fff;
   opacity: 0;
   transition: opacity 0.5s ease 0.8s;
+  z-index: 10;
 }
 
 .intro-animation.active .intro-content {
   opacity: 1;
 }
 
+/* Title with perspective effect */
+.intro-title-container {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.perspective-wrapper {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
 .intro-title {
   font-size: 5rem;
   font-weight: 800;
   text-align: center;
-  margin-bottom: 1rem;
   line-height: 1;
+  position: relative;
+  transform-style: preserve-3d;
 }
 
 .title-line {
@@ -118,6 +207,7 @@ html.has-scroll-dragging {
   transform: translateY(100%);
   transition: transform 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
   margin: 0 0.05em;
+  position: relative;
 }
 
 .intro-animation.active .letter-animation {
@@ -133,12 +223,37 @@ html.has-scroll-dragging {
 .intro-animation.active .title-line:nth-child(2) .letter-animation:nth-child(2) { --index: 6; }
 .intro-animation.active .title-line:nth-child(2) .letter-animation:nth-child(3) { --index: 7; }
 
+/* Title highlight effect */
+.title-highlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
+  opacity: 0;
+  transform: translateX(-100%) skewX(-20deg);
+  filter: blur(5px);
+  transition: all 0.8s ease;
+  pointer-events: none;
+  animation: titleHighlight 6s infinite 3s;
+}
+
+@keyframes titleHighlight {
+  0% { transform: translateX(-100%) skewX(-20deg); opacity: 0; }
+  10% { opacity: 0.8; }
+  40% { transform: translateX(100%) skewX(-20deg); opacity: 0; }
+  100% { transform: translateX(100%) skewX(-20deg); opacity: 0; }
+}
+
+/* Subtitle with improved animation */
 .intro-subtitle {
   font-size: 1.5rem;
   margin-top: 0.5rem;
   display: flex;
   gap: 0.5rem;
   overflow: hidden;
+  letter-spacing: 0.03em;
 }
 
 .word-animation {
@@ -158,6 +273,20 @@ html.has-scroll-dragging {
 .intro-animation.active .word-animation:nth-child(3) { transition-delay: 1.5s; }
 .intro-animation.active .word-animation:nth-child(4) { transition-delay: 1.6s; }
 
+/* Decorative line */
+.decorative-line {
+  width: 0;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.3);
+  margin: 1.5rem 0;
+  transition: width 1.2s ease 1.8s;
+}
+
+.intro-animation.active .decorative-line {
+  width: 120px;
+}
+
+/* Enhanced images display */
 .intro-images {
   position: absolute;
   width: 100%;
@@ -173,6 +302,23 @@ html.has-scroll-dragging {
   transform: scale(0.8);
   transition: all 1s cubic-bezier(0.215, 0.61, 0.355, 1);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  border-radius: 2px;
+}
+
+.image-frame {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.8s ease 2.5s;
+}
+
+.intro-animation.active .image-frame {
+  opacity: 1;
 }
 
 .intro-image-1 {
@@ -219,6 +365,76 @@ html.has-scroll-dragging {
 .intro-image:hover img {
   filter: grayscale(0) contrast(1);
   transform: scale(1.05);
+}
+
+/* Image captions */
+.image-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+}
+
+.intro-image:hover .image-caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.caption-text {
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 1s ease 3s;
+}
+
+.intro-animation.active .scroll-indicator {
+  opacity: 0.7;
+  animation: pulseOpacity 2s infinite alternate;
+}
+
+@keyframes pulseOpacity {
+  0% { opacity: 0.3; }
+  100% { opacity: 0.7; }
+}
+
+.scroll-indicator span {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 0.5rem;
+}
+
+.scroll-arrow {
+  width: 20px;
+  height: 20px;
+  border-right: 1px solid rgba(255, 255, 255, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+  transform: rotate(45deg);
+  animation: arrowBounce 2s infinite;
+}
+
+@keyframes arrowBounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0) rotate(45deg); }
+  40% { transform: translateY(-10px) rotate(45deg); }
+  60% { transform: translateY(-5px) rotate(45deg); }
 }
 
 /* Gallery Styles */
@@ -430,12 +646,16 @@ html.has-scroll-dragging {
     height: 150px;
     right: 25%;
   }
+  
+  .intro-images {
+    transform: scale(0.8);
+  }
 }
 
 /* Locomotive Scroll Animation Classes */
 .is-revealed {
-  opacity: 1;
-  transform: translateY(0);
+  opacity: 1 !important;
+  transform: translateY(0) !important;
 }
 
 /* Remove filter options from original design */
