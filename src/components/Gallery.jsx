@@ -4,10 +4,12 @@ import { artworks } from '../data/artwork';
 import './Gallery.css';
 import { useGalleryAnimations } from '../hooks/useGalleryAnimations';
 
+
+
 const Gallery = () => {
   const scrollRef = useRef(null);
   const [loaded, setLoaded] = useState(false);
-  const { locoInstance, initGalleryItemAnimations } = useGalleryAnimations(scrollRef);
+  const { locoInstance } = useGalleryAnimations(scrollRef);
   
   // Sort artworks by their id to ensure consistent order
   const Artworkz = [...artworks].sort((a, b) => a.id - b.id);
@@ -15,7 +17,6 @@ const Gallery = () => {
   useEffect(() => {
     // Initialize gallery immediately
     setLoaded(true);
-    initGalleryItemAnimations();
     
     // Update locomotive scroll instance if it exists
     if (locoInstance) {
@@ -43,9 +44,9 @@ const Gallery = () => {
               key={artwork.id} 
               className={`artwork-item artwork-item-${artwork.id}`}
               data-scroll
-              data-scroll-speed={index % 2 === 0 ? "0.1" : "-0.1"}
+              data-scroll-speed={"0.1"}
               data-scroll-position="left"
-              data-scroll-delay={index * 0.05}
+              
               style={{ 
                 transitionDelay: `${index * 0.1}s`,
                 opacity: loaded ? 1 : 0,
