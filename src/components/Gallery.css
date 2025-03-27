@@ -42,13 +42,12 @@ html.has-scroll-dragging {
 .gallery-header {
   padding: 2rem 4rem;
   text-align: center;
-  margin-bottom: 2rem;
   position: relative;
+  background-color: #F6F3E4;
 }
 
 .gallery-header h1 {
   font-size: 3rem;
-  margin-bottom: 1rem;
   font-weight: 800;
   background: linear-gradient(120deg, black, grey);
   letter-spacing: 0.15em;

@@ -29,13 +29,15 @@ const Gallery = () => {
  
 
   return (
-    <div className="horizontal-scroll-container" ref={scrollRef} data-scroll-container data-scroll-direction="horizontal">
-      <div className={`gallery-container ${loaded ? 'fade-in' : ''}`} data-scroll-section>
-        <div className="gallery-header" data-scroll data-scroll-speed="1">
+    <>
+    <div className="gallery-header" data-scroll data-scroll-speed="1">
           <h1>TEAM O-7 GALLERY</h1>
           <p className="gallery-subtitle">Explore our curated collection of exceptional artworks</p>
-        </div>
+    </div>
 
+
+    <div className="horizontal-scroll-container" ref={scrollRef} data-scroll-container data-scroll-direction="horizontal">
+      <div className={`gallery-container ${loaded ? 'fade-in' : ''}`} data-scroll-section>
         {/* Horizontal gallery grid with locomotive scroll */}
         <div className="horizontal-gallery-grid">
           {Artworkz.map((artwork, index) => (
@@ -79,6 +81,7 @@ const Gallery = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
