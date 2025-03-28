@@ -68,17 +68,7 @@ const Gallery = () => {
           ))}
         </div>
         
-        {/* Gallery navigation indicators for horizontal scroll */}
-        <div className="gallery-nav-indicators">
-          <div className="scroll-left-indicator">
-            <span>Scroll</span>
-            <div className="scroll-arrow scroll-arrow-left"></div>
-          </div>
-          <div className="scroll-right-indicator">
-            <span>Scroll</span>
-            <div className="scroll-arrow scroll-arrow-right"></div>
-          </div>
-        </div>
+        
       </div>
     </div>
     </>
