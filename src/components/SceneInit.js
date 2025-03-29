@@ -52,8 +52,7 @@ class SceneInit {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.05;
-    this.controls.minDistance = 3;
-    this.controls.maxDistance = 10;
+
 
     // Add lights
     this.addLights();

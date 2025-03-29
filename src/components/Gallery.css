@@ -64,15 +64,15 @@ html.has-scroll-dragging {
   margin: 0 auto;
 }
 
-/* Horizontal Gallery Grid - New layout for horizontal scrolling */
+/* Horizontal Gallery Grid - Masonry/Collage Layout */
 .horizontal-gallery-grid {
   display: flex;
-  flex-direction: row;
+  flex-wrap: nowrap;
   padding: 0 4vw;
   min-height: 80vh;
   width: max-content; /* Allow container to expand based on content */
   align-items: center;
-  gap: 4vw;
+  gap: 2vw;
 }
 
 /* Artwork item styling */
@@ -84,37 +84,52 @@ html.has-scroll-dragging {
   opacity: 0;
   transform: translateX(50px);
   position: relative;
-  /* Variable width for staggered layout */
-  width: 25vw;
+  /* Variable width for collage layout */
   max-width: 500px;
-  min-width: 300px;
+  min-width: 250px;
 }
 
-/* Variable heights for artwork items to create staggered effect */
-.artwork-item:nth-child(3n+1) {
-  margin-top: -8vh;
+/* Masonry/Collage variations */
+.artwork-item:nth-child(4n+1) {
+  width: 35vw;
   height: 60vh;
 }
 
-.artwork-item:nth-child(3n+2) {
-  margin-top: 0;
+.artwork-item:nth-child(4n+2) {
+  width: 25vw;
+  height: 50vh;
+}
+
+.artwork-item:nth-child(4n+3) {
+  width: 30vw;
   height: 70vh;
 }
 
-.artwork-item:nth-child(3n+3) {
-  margin-top: 8vh;
-  height: 50vh;
+.artwork-item:nth-child(4n+4) {
+  width: 20vw;
+  height: 45vh;
 }
 
 .artwork-card {
   width: 100%;
   height: 100%;
-  border-radius: 8px;
+  border-radius: 0;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   transition: all 0.4s ease;
   background-color: #111;
+  /* Collage style with different border widths */
+  border: 10px solid #ffffff;
+}
+
+/* Alternate border widths for collage effect */
+.artwork-item:nth-child(odd) .artwork-card {
+  border-width: 15px;
+}
+
+.artwork-item:nth-child(3n) .artwork-card {
+  border-width: 20px;
 }
 
 .artwork-image-container {
@@ -189,12 +204,27 @@ html.has-scroll-dragging {
 /* Responsive Media Queries */
 @media (max-width: 1400px) {
   .horizontal-gallery-grid {
-    gap: 3vw;
+    gap: 2vw;
   }
   
-  .artwork-item {
-    width: 30vw;
-    min-width: 280px;
+  .artwork-item:nth-child(4n+1) {
+    width: 32vw;
+    height: 55vh;
+  }
+  
+  .artwork-item:nth-child(4n+2) {
+    width: 22vw;
+    height: 45vh;
+  }
+  
+  .artwork-item:nth-child(4n+3) {
+    width: 28vw;
+    height: 65vh;
+  }
+  
+  .artwork-item:nth-child(4n+4) {
+    width: 18vw;
+    height: 40vh;
   }
 }
 
@@ -203,34 +233,26 @@ html.has-scroll-dragging {
     font-size: 2.5rem;
   }
   
-  .artwork-item:nth-child(3n+1) {
-    height: 55vh;
-  }
-  
-  .artwork-item:nth-child(3n+2) {
-    height: 65vh;
-  }
-  
-  .artwork-item:nth-child(3n+3) {
-    height: 45vh;
+  .artwork-item:nth-child(4n+1),
+  .artwork-item:nth-child(4n+2),
+  .artwork-item:nth-child(4n+3),
+  .artwork-item:nth-child(4n+4) {
+    width: 30vw;
+    height: 50vh;
   }
 }
 
 @media (max-width: 768px) {
   .horizontal-gallery-grid {
-    gap: 5vw;
+    gap: 3vw;
   }
   
-  .artwork-item {
-    width: 70vw;
-    min-width: 250px;
-  }
-  
-  .artwork-item:nth-child(3n+1),
-  .artwork-item:nth-child(3n+2),
-  .artwork-item:nth-child(3n+3) {
+  .artwork-item:nth-child(4n+1),
+  .artwork-item:nth-child(4n+2),
+  .artwork-item:nth-child(4n+3),
+  .artwork-item:nth-child(4n+4) {
+    width: 60vw;
     height: 50vh;
-    margin-top: 0;
   }
   
   .gallery-header h1 {
@@ -252,10 +274,16 @@ html.has-scroll-dragging {
     gap: 2rem;
   }
   
-  .artwork-item {
+  .artwork-item:nth-child(4n+1),
+  .artwork-item:nth-child(4n+2),
+  .artwork-item:nth-child(4n+3),
+  .artwork-item:nth-child(4n+4) {
     width: 100%;
-    height: 50vh !important;
-    margin-top: 0 !important;
+    height: 50vh;
     min-width: auto;
+  }
+  
+  .artwork-card {
+    border-width: 8px;
   }
 }

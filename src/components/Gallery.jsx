@@ -26,7 +26,13 @@ const Gallery = () => {
     }
   }, [locoInstance]);
 
- 
+  // Get a slight random rotation for collage effect
+  const getRandomRotation = (index) => {
+    // Create a deterministic but varied rotation based on index
+    // Keep rotations subtle between -2 and 2 degrees
+    const rotationValues = [-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2];
+    return rotationValues[index % rotationValues.length];
+  };
 
   return (
     <>
@@ -38,7 +44,7 @@ const Gallery = () => {
 
     <div className="horizontal-scroll-container" ref={scrollRef} data-scroll-container data-scroll-direction="horizontal">
       <div className={`gallery-container ${loaded ? 'fade-in' : ''}`} data-scroll-section>
-        {/* Horizontal gallery grid with locomotive scroll */}
+        {/* Horizontal gallery grid with masonry/collage layout */}
         <div className="horizontal-gallery-grid">
           {Artworkz.map((artwork, index) => (
             <Link 
@@ -46,13 +52,12 @@ const Gallery = () => {
               key={artwork.id} 
               className={`artwork-item artwork-item-${artwork.id}`}
               data-scroll
-              data-scroll-speed={"0.1"}
+              data-scroll-speed={index % 2 === 0 ? "0.05" : "0.1"}
               data-scroll-position="left"
-              
               style={{ 
                 transitionDelay: `${index * 0.1}s`,
                 opacity: loaded ? 1 : 0,
-                transform: loaded ? 'translateX(0)' : 'translateX(50px)'
+                transform: loaded ? `translateX(0) rotate(${getRandomRotation(index)}deg)` : 'translateX(50px)',
               }}
             >
               <div className="artwork-card">
