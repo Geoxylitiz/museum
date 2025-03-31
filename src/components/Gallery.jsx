@@ -26,13 +26,6 @@ const Gallery = () => {
     }
   }, [locoInstance]);
 
-  // Get a slight random rotation for collage effect
-  const getRandomRotation = (index) => {
-    // Create a deterministic but varied rotation based on index
-    // Keep rotations subtle between -2 and 2 degrees
-    const rotationValues = [-2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2];
-    return rotationValues[index % rotationValues.length];
-  };
 
   return (
     <>
@@ -57,7 +50,6 @@ const Gallery = () => {
               style={{ 
                 transitionDelay: `${index * 0.1}s`,
                 opacity: loaded ? 1 : 0,
-                transform: loaded ? `translateX(0) rotate(${getRandomRotation(index)}deg)` : 'translateX(50px)',
               }}
             >
               <div className="artwork-card">
