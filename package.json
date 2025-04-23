@@ -13,6 +13,7 @@
     "@gsap/react": "^2.1.2",
     "@react-three/drei": "^10.0.4",
     "@react-three/postprocessing": "^3.0.4",
+    "framer-motion": "^12.8.0",
     "gsap": "^3.12.7",
     "imagesloaded": "^5.0.0",
     "locomotive-scroll": "^4.1.4",
