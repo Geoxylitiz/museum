@@ -147,6 +147,11 @@
   .navbar.scrolled {
     padding: 15px 20px;
   }
+
+  .nav-links { /* Assuming you have a class for your navigation links */
+    display: none;
+  }
+
   
   .menu-link {
     font-size: 2rem;
@@ -156,5 +161,21 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 20px;
+  }
+
+  .nav-logo {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: flex; /* Show the hamburger icon on mobile */
+  }
+}
+
+@media (min-width: 769px) {
+  .nav-links { /* Show the navigation links on larger screens */
+    display: flex; /* or block, depending on your layout */
+    align-items: center;
+    gap: 20px; /* Adjust the gap as needed */
   }
 }
