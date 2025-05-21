@@ -18,7 +18,6 @@
 body {
   background-color: var(--secondary-color);
   color: var(--text-color);
-  font-family: 'Inter', 'Helvetica Neue', sans-serif;
   font-feature-settings: "liga" 1, "kern" 1;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;

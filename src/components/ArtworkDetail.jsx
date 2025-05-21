@@ -6,6 +6,7 @@ import './ArtworkDetail.css';
 import { useGSAP } from '@gsap/react';
 import SceneInit from './SceneInit.js'; // Adjust the import path as needed
 import { useLocomotive } from '../hooks/useLocomotive.js'
+import GcashModal from './GcashModal';
 
 const ArtworkDetail = () => {
   const { id } = useParams();
@@ -25,6 +26,7 @@ const ArtworkDetail = () => {
   const loadingOverlayRef = useRef(null);
   const loadingProgressRef = useRef(null);
   const contentRef = useRef(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   // Initialize Locomotive Scroll and get the instance
   const locomotiveInstance = useLocomotive(scrollRef);
@@ -190,6 +192,10 @@ useEffect(() => {
                 }, [viewMode, artwork]);
 
 // Handle back navigation with animation
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
 const handleBack = (e) => {
   e.preventDefault();
   
@@ -367,12 +373,15 @@ return (
             </div>
           )}
           
+          
+
           <footer className="artwork-footer">
             <div className="footer-content">
               <div className="footer-navigation">
                 <Link to="/" className="footer-link">Home</Link>
                 <Link to="/about" className="footer-link">About</Link>
                 <Link to="/contact" className="footer-link">Contact us</Link>
+                <Link to="#" className="footer-link" onClick={toggleModal}>Donate Us</Link>
               </div>
               <div className="footer-copyright">
                 <p>© {new Date().getFullYear()} TEAM 0-7. All rights reserved.</p>
@@ -382,6 +391,7 @@ return (
         </div>
       </div>
     </div>
+    <GcashModal isOpen={isModalOpen} onClose={toggleModal} />
   </>
 );
 };

@@ -69,7 +69,7 @@ const About = () => {
           <div className="team-grid">
             <div className="team-member">
               <div className="member-image">
-                <img src={'/team/bernard.png'} alt="Bernard VECTOR King" />
+                <img src={'/team/bern.png'} alt="Bernard VECTOR King" />
               </div>
               <h3>Bernard VECTOR King</h3>
               <p>Founder & Creative Director</p>
@@ -78,7 +78,7 @@ const About = () => {
               <div className="member-image">
                 <img src={'/team/justine.png'} alt="Justine Llamera" />
               </div>
-              <h3>Justine Llamera</h3>
+              <h3>Jusmine Llamera</h3>
               <p>Technology Lead</p>
             </div>
             <div className="team-member">

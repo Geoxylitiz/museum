@@ -81,7 +81,7 @@ const Contact = () => {
               <ul className="info-list">
                 <li>
                   <span className="info-label">Email</span>
-                  <a href="mailto:info@team07gallery.com" className="info-value">info@team07gallery.com</a>
+                  <a href="mailto:johnbernardo@neu.edu.ph" className="info-value">johnbernardo@neu.edu.ph</a>
                 </li>
                 <li>
                   <span className="info-label">Phone</span>
@@ -92,7 +92,7 @@ const Contact = () => {
                   <address className="info-value">
                     123 Art Gallery Lane<br />
                     Digital District<br />
-                    New York, NY 10001
+                    Batasan, NY 10001
                   </address>
                 </li>
               </ul>
@@ -102,8 +102,8 @@ const Contact = () => {
               <h3>Follow Us</h3>
               <div className="social-links">
                 <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+                <a href="https://www.facebook.com/legendoffarleo" target="_blank" rel="noopener noreferrer">Facebook</a>
+                
               </div>
             </div>
             

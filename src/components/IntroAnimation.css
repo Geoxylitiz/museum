@@ -138,6 +138,15 @@
     }
   }
   
+  @media (max-width: 480px) {
+    .subtitle {
+      font-size: 0.9rem;
+      letter-spacing: 0.2em;
+      padding: 0 20px; /* Add some horizontal padding */
+      text-align: center; /* Center align text */
+    }
+  }
+
   /* High-contrast mode for accessibility */
   @media (prefers-contrast: more) {
     .title-letter {

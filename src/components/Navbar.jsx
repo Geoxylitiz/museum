@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import './Navbar.css';
+import GcashModal from './GcashModal';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   // Handle scroll effect
   useEffect(() => {
@@ -69,6 +71,10 @@ const Navbar = () => {
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
   
   return (
     <>
@@ -92,12 +98,14 @@ const Navbar = () => {
           <div className="menu-footer">
             <p>© 2024 BERNARD o-7</p>
             <div className="social-links">
+              <a href="#"  onClick={toggleModal} >Donate Us</a>
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://www.facebook.com/legendoffarleo" target="_blank" rel="noopener noreferrer">Facebook</a>
             </div>
           </div>
         </div>
       </div>
+      <GcashModal isOpen={isModalOpen} onClose={toggleModal} />
     </>
   );
 };
